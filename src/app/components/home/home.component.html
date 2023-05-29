@@ -1,0 +1,79 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1>Kata in Exalt</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group">
+                <label for="accountNumber">Account Number</label>
+                <div class="d-flex justify-content-start align-items-center">
+                    <input type="text" [(ngModel)]="accountNumber" class="form-control w-50 mb-1" id="accountNumber"
+                        placeholder="Account Number" />
+                    <button type="button" [disabled]="accountNumber.length == 0" class="btn btn-outline-primary mx-1"
+                        (click)="chercheTransaction()"><span> Get Transactions</span></button>
+                    <button type="button" [disabled]="accountNumber.length == 0" class="btn btn-outline-primary mx-1"
+                        (click)="chercheBalance()"><span> Get Balance</span></button>
+
+                </div>
+            </div>
+
+            <div class="row" *ngIf="balance >= 0">
+                <nz-alert nzType="success" nzCloseable nzMessage="Balance"
+                    nzDescription="Votre balance est de {{balance}} €" (nzOnClose)="afterClose()"></nz-alert>
+            </div>
+
+            <div class="transaction-history">
+                <nz-table #basicTable [nzData]="transaction" nzTitle="Historique de transaction">
+                    <thead>
+                        <tr>
+                            <th>Account Number</th>
+                            <th>Montant</th>
+                            <th>Type de transaction</th>
+                            <th>Date de transaction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of basicTable.data"  [ngClass]="data.type === 'retrait' ? 'retraitClasse' : 'depotClasse'">
+                            <td>{{data.accountNumber}}</td>
+                            <td>{{data.amount}}</td>
+                            <td>{{data.type}}</td>
+                            <td>{{data.transactionDate | date:"dd/MM/yyyy à HH:mm"}}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Faire une Transaction</h4>
+                    <div class="d-flex flex-column justify-content-start mx-5">
+                        <div class="form-group mb-2">
+                            <label for="accountNumberTransaction">Account Number</label>
+                            <input type="text" [(ngModel)]="accountNumberTransaction" class="form-control w-75"
+                                id="accountNumberTransaction" placeholder="Account Number" />
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="amount">Amount</label>
+                            <input type="number" [(ngModel)]="amount" class="form-control w-75" id="amount" placeholder="Amount" />
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="typeTransaction">Type de transaction</label>
+                            <select [(ngModel)]="typeTransaction" class="form-select w-25" id="typeTransaction">
+                                <option value="depot">Dépot</option>
+                                <option value="retrait">Rétrait</option>
+                            </select>
+                        </div>
+                        <button type="button" [disabled]="accountNumberTransaction.length == 0 || amount <= 0 || (typeTransaction != 'depot' && typeTransaction != 'retrait') "
+                            class="btn btn-primary mx-1 w-25" (click)="faireTransaction()"><span> Faire une
+                                transaction</span></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
